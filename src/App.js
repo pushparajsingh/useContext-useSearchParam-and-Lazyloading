@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { createContext } from "react";
+import { Suspense, lazy } from "react";
+import { useSearchParams } from "react-router-dom";
 
-function App() {
+export const Global = createContext();
+
+export function App() {
+  const Data = lazy(() => import("./check.js"));
+  const [state, setState] = useSearchParams();
+  const value = state.get("age");
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Suspense fallback={<>...Loading</>}>
+        <Global.Provider value={{ name: "ram", lastName: "singh" }}>
+          <h1>Hello World</h1>
+          <h1>{value}</h1>
+          <Data />
+          <button onClick={() => setState({ age: "80" })}>age 80</button>
+          <button onClick={() => setState({ age: "90" })}>age 90</button>
+        </Global.Provider>
+      </Suspense>
     </div>
   );
 }
-
-export default App;
